@@ -1,0 +1,57 @@
+/pem/invaas-sg.pem
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+.env.aws
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+pip-log.txt
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Models and data
+models/*.bin
+models/*.safetensors
+storage/*/
+training_data/
+!storage/.gitkeep
+
+# AWS keys and certificates
+pem/*.pem
+*.key
+*.crt
+
+# Logs
+logs/
+*.log
+
+# Docker
+docker-compose.override.yml
+/redis_data/
+/postgres_data/
+/models/
+/storage/
+githubtoken.txt
+/command.txt
