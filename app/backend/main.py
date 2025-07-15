@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+from app.backend.routers.receipts import router
+from routers import receipts
 import os
 
 app = FastAPI(
@@ -8,14 +11,16 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure this properly for production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include routers
+app.include_router(router)
 
 @app.get("/")
 async def root():
@@ -30,12 +35,4 @@ async def health_check():
     return {
         "status": "healthy",
         "service": "receipt-ocr-api"
-    }
-
-@app.get("/api/v1/test")
-async def test_endpoint():
-    return {
-        "message": "API is working!",
-        "azure_configured": bool(os.getenv("AZURE_CV_KEY")),
-        "database_url": bool(os.getenv("DATABASE_URL"))
     }
