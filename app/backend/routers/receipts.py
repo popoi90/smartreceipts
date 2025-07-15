@@ -5,8 +5,12 @@ import uuid
 from datetime import datetime
 import aiofiles
 from typing import Optional
+from services.azure_ocr import AzureOCRService
 
 router = APIRouter(prefix="/api/v1/receipts", tags=["receipts"])
+
+# Initialize Azure OCR service
+azure_ocr = AzureOCRService()
 
 # Allowed file types
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".pdf", ".tiff", ".bmp"}
@@ -50,15 +54,31 @@ async def upload_receipt(
     async with aiofiles.open(file_path, 'wb') as f:
         await f.write(contents)
 
-    return {
-        "receipt_id": receipt_id,
-        "filename": filename,
-        "original_filename": file.filename,
-        "file_size": len(contents),
-        "file_path": file_path,
-        "status": "uploaded",
-        "message": "Receipt uploaded successfully"
-    }
+    # Process with Azure OCR
+    try:
+        ocr_result = await azure_ocr.process_receipt(file_path)
+
+        return {
+            "receipt_id": receipt_id,
+            "filename": filename,
+            "original_filename": file.filename,
+            "file_size": len(contents),
+            "file_path": file_path,
+            "status": "processed",
+            "ocr_result": ocr_result,
+            "message": "Receipt uploaded and processed successfully"
+        }
+    except Exception as e:
+        return {
+            "receipt_id": receipt_id,
+            "filename": filename,
+            "original_filename": file.filename,
+            "file_size": len(contents),
+            "file_path": file_path,
+            "status": "uploaded",
+            "ocr_result": {"success": False, "error": str(e)},
+            "message": "Receipt uploaded but OCR processing failed"
+        }
 
 
 @router.get("/test-upload")
