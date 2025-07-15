@@ -70,7 +70,7 @@ services:
     command: >
       bash -c "
         pip install -r /tmp/requirements.txt &&
-        celery -A app.workers.celery_app worker --loglevel=info --reload
+        celery -A workers.celery_app worker --loglevel=info --reload
       "
 
   frontend:
