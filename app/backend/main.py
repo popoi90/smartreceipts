@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.backend.routers.receipts import router
-from routers import receipts
+
+
 import os
+
+from app.backend.routers.receipts import router
 
 app = FastAPI(
     title="Philippine Receipt OCR API",
